@@ -32,7 +32,7 @@ export function Waitlist() {
   };
 
   return (
-    <section id="waitlist" className="relative py-32 px-6">
+    <section id="waitlist" className="relative py-40 px-6 border-t border-border">
       <div className="max-w-5xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 40 }}

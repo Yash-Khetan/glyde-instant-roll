@@ -1,5 +1,5 @@
-import { motion } from "framer-motion";
-import { Card } from "@/components/ui/card";
+import { motion, useScroll, useTransform } from "framer-motion";
+import { useRef } from "react";
 import { Footprints, Zap, RotateCcw } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
@@ -12,49 +12,49 @@ const steps: Step[] = [
 ];
 
 export function HowItWorks() {
+  const ref = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
+  const lineScale = useTransform(scrollYProgress, [0.1, 0.6], [0, 1]);
+
   return (
-    <section id="how" className="relative py-32 px-6">
-      <div className="max-w-7xl mx-auto">
+    <section id="how" className="relative py-40 px-6 border-t border-border">
+      <div ref={ref} className="max-w-6xl mx-auto">
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-100px" }}
-          transition={{ duration: 0.8 }}
-          className="text-center mb-20"
+          viewport={{ once: true, margin: "-120px" }}
+          transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
+          className="max-w-2xl mb-24"
         >
-          <p className="text-xs uppercase tracking-[0.3em] text-primary mb-4">How it works</p>
-          <h2 className="font-display text-4xl md:text-6xl font-bold tracking-tight">
-            Three taps <span className="text-gradient-brand">change everything</span>
+          <p className="text-[11px] uppercase tracking-[0.3em] text-muted-foreground mb-5">— How it works</p>
+          <h2 className="font-display text-4xl md:text-6xl font-semibold tracking-tighter leading-[1.05]">
+            Three taps <span className="italic text-gradient-brand">change everything.</span>
           </h2>
         </motion.div>
 
-        <div className="grid md:grid-cols-3 gap-6">
+        <div className="relative grid md:grid-cols-3 gap-px bg-border rounded-2xl overflow-hidden">
+          <motion.div
+            aria-hidden
+            style={{ scaleX: lineScale }}
+            className="absolute top-0 left-0 right-0 h-px bg-gradient-brand origin-left"
+          />
           {steps.map((s, i) => (
             <motion.div
               key={s.title}
-              initial={{ opacity: 0, y: 60 }}
+              initial={{ opacity: 0, y: 40 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-80px" }}
-              transition={{ duration: 0.7, delay: i * 0.15, ease: [0.22, 1, 0.36, 1] }}
-              whileHover={{ y: -6 }}
+              transition={{ duration: 0.8, delay: i * 0.12, ease: [0.22, 1, 0.36, 1] }}
+              className="group relative bg-background p-10 min-h-[280px] flex flex-col justify-between transition-colors hover:bg-card/40"
             >
-              <Card className="group relative h-full p-8 bg-card/60 border-border rounded-2xl overflow-hidden transition-all hover:border-primary/40 hover:shadow-[0_0_40px_color-mix(in_oklab,var(--glyde-blue)_25%,transparent)]">
-                <div
-                  aria-hidden
-                  className="absolute -top-20 -right-20 h-40 w-40 rounded-full opacity-0 group-hover:opacity-100 blur-3xl transition-opacity"
-                  style={{ background: "var(--gradient-brand)" }}
-                />
-                <div className="relative">
-                  <div className="flex items-center justify-between mb-8">
-                    <div className="h-14 w-14 rounded-xl bg-gradient-brand flex items-center justify-center glow-blue">
-                      <s.icon className="h-7 w-7 text-primary-foreground" />
-                    </div>
-                    <span className="font-display text-5xl font-bold text-muted-foreground/20">{s.step}</span>
-                  </div>
-                  <h3 className="font-display text-2xl font-semibold mb-3">{s.title}</h3>
-                  <p className="text-muted-foreground leading-relaxed">{s.desc}</p>
-                </div>
-              </Card>
+              <div className="flex items-start justify-between">
+                <span className="font-display text-sm text-muted-foreground tabular-nums">{s.step}</span>
+                <s.icon className="h-5 w-5 text-muted-foreground group-hover:text-primary transition-colors" strokeWidth={1.5} />
+              </div>
+              <div>
+                <h3 className="font-display text-3xl font-semibold mb-3 tracking-tight">{s.title}</h3>
+                <p className="text-muted-foreground leading-relaxed text-[15px]">{s.desc}</p>
+              </div>
             </motion.div>
           ))}
         </div>
