@@ -1,26 +1,39 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { Navbar } from "@/components/glyde/Navbar";
+import { Hero } from "@/components/glyde/Hero";
+import { HowItWorks } from "@/components/glyde/HowItWorks";
+import { Features } from "@/components/glyde/Features";
+import { Waitlist } from "@/components/glyde/Waitlist";
+import { Footer } from "@/components/glyde/Footer";
 
 export const Route = createFileRoute("/")({
+  head: () => ({
+    meta: [
+      { title: "Glyde — Walk. Tap. Roll." },
+      {
+        name: "description",
+        content:
+          "Glyde: the world's first tap-activated retractable wheel shoe. Switch between walking and skating in 0.3 seconds. Join the waitlist.",
+      },
+      { property: "og:title", content: "Glyde — Walk. Tap. Roll." },
+      {
+        property: "og:description",
+        content: "Tap-activated retractable wheel shoes. Premium streetwear-tech.",
+      },
+    ],
+  }),
   component: Index,
 });
 
-// IMPORTANT: Replace this placeholder. For sites with multiple pages (About, Services, Contact, etc.),
-// create separate route files (about.tsx, services.tsx, contact.tsx) — don't put all pages in this file.
-function PlaceholderIndex() {
-  return (
-    <div
-      className="flex min-h-screen items-center justify-center"
-      style={{ backgroundColor: "#fcfbf8" }}
-    >
-      <img
-        data-lovable-blank-page-placeholder="REMOVE_THIS"
-        src="https://cdn.gpteng.co/blank-app-v1.svg"
-        alt="Your app will live here!"
-      />
-    </div>
-  );
-}
-
 function Index() {
-  return <PlaceholderIndex />;
+  return (
+    <main className="relative min-h-screen bg-background text-foreground overflow-x-hidden">
+      <Navbar />
+      <Hero />
+      <HowItWorks />
+      <Features />
+      <Waitlist />
+      <Footer />
+    </main>
+  );
 }
