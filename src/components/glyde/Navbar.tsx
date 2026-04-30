@@ -20,7 +20,7 @@ export function Navbar() {
         </nav>
         <Button
           asChild
-          className="bg-primary text-primary-foreground hover:bg-primary/90 transition-all hover:shadow-[0_0_24px_var(--glyde-blue)] rounded-full px-5"
+          className="bg-foreground text-background hover:bg-foreground/90 rounded-full px-5 h-9 text-sm"
         >
           <a href="#waitlist">Join Waitlist</a>
         </Button>
