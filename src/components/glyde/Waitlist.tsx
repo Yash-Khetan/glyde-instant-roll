@@ -24,11 +24,38 @@ function Counter({ to }: { to: number }) {
 }
 
 export function Waitlist() {
+  const [email, setEmail] = useState("");
   const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
-  const onSubmit = (e: FormEvent) => {
+  const onSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    setSubmitted(true);
+    setLoading(true);
+    setError("");
+
+    try {
+      const res = await fetch(import.meta.env?.VITE_API_URL || "http://localhost:5000/api/waitlist", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.error || "Failed to join waitlist");
+      }
+
+      setSubmitted(true);
+      setEmail("");
+    } catch (err: any) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -64,19 +91,26 @@ export function Waitlist() {
               onSubmit={onSubmit}
               className="mt-10 flex flex-col sm:flex-row gap-3 max-w-xl mx-auto"
             >
-              <Input
-                type="email"
-                required
-                placeholder="you@domain.com"
-                disabled={submitted}
-                className="h-12 rounded-full bg-background/60 border-border px-5 text-base placeholder:text-muted-foreground/60 focus-visible:ring-primary"
-              />
+              <div className="flex-1">
+                <Input
+                  type="email"
+                  required
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="you@domain.com"
+                  disabled={submitted || loading}
+                  className="h-12 w-full rounded-full bg-background/60 border-border px-5 text-base placeholder:text-muted-foreground/60 focus-visible:ring-primary"
+                />
+                {error && <p className="text-red-500 text-sm mt-2 text-left px-4">{error}</p>}
+              </div>
               <Button
                 type="submit"
-                disabled={submitted}
+                disabled={submitted || loading}
                 className="h-12 rounded-full px-7 bg-primary text-primary-foreground hover:bg-primary/90 transition-all hover:shadow-[0_0_28px_var(--glyde-blue)]"
               >
-                {submitted ? (
+                {loading ? (
+                  "Joining..."
+                ) : submitted ? (
                   <>
                     <Check className="mr-2 h-4 w-4" /> You're in
                   </>
