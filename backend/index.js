@@ -42,6 +42,11 @@ const waitlistLimiter = rateLimit({
 // ROUTES
 // ==========================================
 
+// home route
+app.get("/", (req, res) => {
+  res.send("the backend api is up and running!");
+})
+
 // Waitlist Submission Endpoint
 app.post('/api/waitlist', waitlistLimiter, async (req, res) => {
   const { email } = req.body;
